@@ -1,9 +1,14 @@
 import express from 'express'
 import multer from 'multer'
-import { PostPicture } from '../../lib/fs-tool.js'
+import { getPDFReadableStreamPost, PostPicture } from '../../lib/fs-tool.js'
 import { getPDFReadableStream } from '../../lib/pdf.js'
 // import {cloudStorage} from 'multer-storage-cloudinary'
 import { pipeline } from 'stream'
+import json2csv from 'json2csv'
+const {Transform} = json2csv
+
+
+
 
 
 // const cloudStorage = new CloudStorage({
@@ -41,5 +46,23 @@ fileRouter.post("/upload", multer({}).single("blogPic"), async (req, res, next) 
       next(error)
     }
   })
+
+  fileRouter.get("/FileCsv", async (req, res, next) => {
+    try {
+      const filename = "File.csv"
+      res.setHeader("Content-Disposition", `attachment; filename=${filename}`) 
+      const source = getPDFReadableStreamPost()
+      const transform = new Transform({fields:["title","cover","author"]})
+      const destination = res
+  
+      pipeline(source,transform, destination, err => {
+        if (err) next(err)
+      })
+    } catch (error) {
+      next(error)
+    }
+  })
+
+  
 
   export default fileRouter

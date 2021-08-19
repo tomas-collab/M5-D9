@@ -4,6 +4,7 @@ import { join } from "path"
 import listEndPoints from 'express-list-endpoints'
 import authorsRouter from './services/authors/index.js'
 import fileRouter from './services/files/index.js'
+import userRouter from './services/users/index.js'
 import { notFoundErrorHandler, forbiddenErrorHandler, badRequestErrorHandler, genericServerErrorHandler } from "./errorHandlers.js"
 
 const server = express()
@@ -32,6 +33,7 @@ server.use(cors(corsOpts))
 //Routes
 server.use('/authors', authorsRouter)
 server.use('/files',fileRouter)
+server.use('/users', userRouter)
 
 // error middleware
 server.use(notFoundErrorHandler)
