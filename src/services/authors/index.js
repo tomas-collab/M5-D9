@@ -10,7 +10,7 @@ const {validationResult} = expresValidator
 
 
 const authorsRouter = express.Router()
-
+const authorsJSONpath = join(dirname(fileURLToPath(import.meta.url)),'post.json')
 
                                  // post 
 authorsRouter.post('/', postValidation,(request,response)=>{
@@ -52,7 +52,8 @@ authorsRouter.put('/:authorID',(request,response)=>{
     const updateAuthors = {...request.body,id:request.params.authorID}
     remainingAuthors.push(updateAuthors)
     fs.writeFileSync(authorsJSONpath,JSON.stringify(remainingAuthors))
-    response.send(updateAuthors)})
+    response.send(updateAuthors)
+})
                               //delete
 authorsRouter.delete('/:authorID',(request,response)=>{
     const authors = JSON.parse(fs.readFileSync(authorsJSONpath))
